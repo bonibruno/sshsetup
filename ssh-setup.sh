@@ -24,12 +24,11 @@ for instance in "${instances[@]}"; do
     ssh -i ~/.ssh/your-ssh-access-key -o StrictHostKeyChecking=no $username@$instance "ssh-keygen -t rsa -b 4096 -C \"$email\" -f ~/.ssh/id_rsa -N ''"
 done
 
-# Copy public keys to each other instance
-for instance in "${instances[@]}"; do
-    for other_instance in "${instances[@]}"; do
-        if [ "$instance" != "$other_instance" ]; then
-            echo "Copying public key to $other_instance from $instance"
-            ssh -i ~/.ssh/your-ssh-access-key -o StrictHostKeyChecking=no $username@$instance "ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no $username@$other_instance"
+for src_instance in "${instances[@]}"; do
+    for dest_instance in "${instances[@]}"; do
+        if [ "$src_instance" != "$dest_instance" ]; then
+            echo "Copying public key from $src_instance to $dest_instance"
+            ssh -i ~/.ssh/your-ssh-access-key -o StrictHostKeyChecking=no "$username@$src_instance" "cat ~/.ssh/id_rsa.pub" | ssh -i ~/.ssh/your-ssh-access-key -o StrictHostKeyChecking=no "$username@$dest_instance" "cat >> ~/.ssh/authorized_keys"
         fi
     done
 done
