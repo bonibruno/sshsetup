@@ -8,7 +8,7 @@ instances_file="instances.txt"
 username="ec2-user"
 
 # Email for SSH key comment
-email="boni.bruno@weka.io"
+email="you@youremail.com"
 
 # Check if instances file exists
 if [ ! -f "$instances_file" ]; then
